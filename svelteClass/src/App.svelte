@@ -1,47 +1,110 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+
+  import PokemonCard from "./lib/components/PokemonCard.svelte";
+  import PokemonBanner from "./lib/components/PokemonBanner.svelte";
+  let pokemons = $state([]);
+  let isLoading = $state(true);
+  let searchTerm = $state('');
+  let selectedType = $state(null);
+
+  $effect( () =>{
+    const fetchPokemons = async() =>{
+      try{
+        const pokemonUrl = 'https://pokeapi.co/api/v2/pokemon?limit=151&offset=0';
+        const pokemonResponse = await fetch(pokemonUrl);
+        const data = await pokemonResponse.json();
+
+        const pokemonDetailsPromises = data.results.map(pokemon => 
+          fetch(pokemon.url).then(res => res.json())
+        );
+
+        const detailedPokemons = await Promise.all(pokemonDetailsPromises);
+        pokemons = detailedPokemons;
+      }catch(error){
+        console.error("Falha ao buscar Pokémon:", error);
+      }finally{
+        isLoading = false;
+      }
+    }
+    fetchPokemons();
+  });
+
+  const availableTypes = $derived(
+    [...new Set(pokemons.flatMap(p => p.types.map(t => t.type.name)))].sort()
+  );
+
+  
+  let filteredPokemons = $derived(
+    pokemons
+      .filter(pokemon =>
+        pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .filter(pokemon => {
+        if (!selectedType) return true;
+        return pokemon.types.some(t => t.type.name === selectedType);
+      })
+  );
 </script>
 
 <main>
-  <div>
-    <a href="https://vite.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
+  <PokemonBanner></PokemonBanner>
+    <div class="inputs">
+      
+    <input 
+      type="text" 
+      placeholder="Pesquisar Pokemon..." 
+      bind:value={searchTerm}
+    />
+
+    <select bind:value={selectedType}>
+        <option value={null}>Todos os tipos</option>
+
+        {#each availableTypes as type}
+          <option value={type}>{type}</option>
+        {/each}
+    </select>
   </div>
-  <h1>Vite + Svelte</h1>
+  
 
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+{#if isLoading}
+    <p>Carregando pokemons...</p>
+  {:else if filteredPokemons.length === 0}
+    <p>Nenhum Pokémon encontrado com esses filtros.</p>
+  {:else}
+    <div class="pokemon-list">
+      {#each filteredPokemons as pokemon (pokemon.id)}
+        <PokemonCard {pokemon} />
+      {/each}
+    </div>
+  {/if}
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  .pokemon-list{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+
+    gap: 16px;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+
+  .inputs{
+    display: flex;
+    gap: 16px;
+    justify-content: center;
   }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
+  
+  input, select{
+    border: 2px solid grey;
+    border-radius: 16px;
+    padding:16px;
+    margin-bottom: 16px;
+    margin-top: 16px;
   }
-  .read-the-docs {
-    color: #888;
+
+  input{
+    width: 400px;
   }
+
 </style>
