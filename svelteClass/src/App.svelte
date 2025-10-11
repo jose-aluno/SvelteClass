@@ -108,6 +108,7 @@
         display: flex;
         gap: 16px;
         justify-content: center;
+        flex-flow: row wrap;
     }
     input, select{
         border: 2px solid grey;
