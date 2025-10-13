@@ -105,10 +105,15 @@
     }
     
     .inputs{
+        background: white;
         display: flex;
+        position: sticky;
+        top: 0;
         gap: 16px;
         justify-content: center;
+        z-index: 1;
     }
+
     input, select{
         border: 2px solid grey;
         border-radius: 16px;

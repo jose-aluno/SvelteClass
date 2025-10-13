@@ -1,10 +1,5 @@
 <script>
     const { pokemon, onClose } = $props();
-
-    // Função para evitar que o clique no conteúdo do modal o feche
-    function stopPropagation(event) {
-        event.stopPropagation();
-    }
 </script>
 
 <div class="modal-backdrop">
