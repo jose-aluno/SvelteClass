@@ -112,6 +112,7 @@
         gap: 16px;
         justify-content: center;
         z-index: 1;
+        flex-flow: row wrap;
     }
 
     input, select{
