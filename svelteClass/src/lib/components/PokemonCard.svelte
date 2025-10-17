@@ -1,12 +1,11 @@
 <script>
     const { pokemon } = $props()
-    let name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
 </script>
 
 <article>
     <img src={pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default} alt={pokemon.name}>
     <div class="info">
-        <span class="pokemon-id">#{String(pokemon.id)}</span>
+        <span class="pokemon-id">#{String(pokemon.id).padStart(3,'0')}</span>
         <h3 class="pokemon-name">{pokemon.name}</h3>
     </div>
 </article>
@@ -33,6 +32,7 @@
 
     h3{
         margin: 0;
+        text-transform: capitalize;
     }
 
     img{
