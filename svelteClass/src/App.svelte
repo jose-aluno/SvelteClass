@@ -105,7 +105,7 @@
     }
     
     .inputs{
-        background: white;
+        background: transparent;
         display: flex;
         position: sticky;
         top: 0;
