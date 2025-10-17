@@ -3,6 +3,7 @@
     import PokemonBanner from "./lib/components/PokemonBanner.svelte";
     let pokemons = $state([]);
     let isLoading = $state(true);
+    let searchTerm = $state('');
 
     $effect(() => {
         const fetchPokemons = async () => {
@@ -27,15 +28,32 @@
         };
         fetchPokemons();
     });
+
+    let filteredPokemons = $derived(
+        pokemons
+            .filter(pokemon =>
+                pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+    );
 </script>
 
 <main>
+    <div class="inputs">
+        <input 
+            type="text" 
+            placeholder="Pesquisar Pokemon..." 
+            bind:value={searchTerm}
+        />
+    </div>
+
     <PokemonBanner></PokemonBanner>
     {#if isLoading}
         <p>Carregando pokemons...</p>
+    {:else if filteredPokemons.length === 0}
+        <p>Nenhum Pokémon encontrado com esses filtros.</p>
     {:else}
         <div class="pokemon-list">
-            {#each pokemons as pokemon (pokemon.id)}
+            {#each filteredPokemons as pokemon (pokemon.id)}
                 <PokemonCard {pokemon} />
             {/each}
         </div>
