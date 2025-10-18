@@ -1,14 +1,14 @@
 <script>
     import PokemonCard from "./lib/components/PokemonCard.svelte";
     import PokemonBanner from "./lib/components/PokemonBanner.svelte";
-    import PokemonDetailModal from "./lib/components/PokemonDetailModal.svelte";
+    import PokemonDetailModal from "./lib/components/PokemonDetailModal.svelte"; // Modal
 
     let pokemons = $state([]);
     let isLoading = $state(true);
     let searchTerm = $state('');
     let selectedType = $state(null);
     
-    let selectedPokemon = $state(null);
+    let selectedPokemon = $state(null); // Modal
 
     $effect( () =>{
         const fetchPokemons = async() =>{
@@ -47,13 +47,13 @@
             })
     );
 
-    const openModal = (pokemon) => {
+    const openModal = (pokemon) => { 
         selectedPokemon = pokemon;
-    };
+    }; //Modal
 
     const closeModal = () => {
         selectedPokemon = null;
-    };
+    }; //Modal
 
 </script>
 
@@ -84,14 +84,14 @@
     {:else}
         <div class="pokemon-list">
             {#each filteredPokemons as pokemon (pokemon.id)}
-                <PokemonCard {pokemon} onSelect={() => openModal(pokemon)} />
+                <PokemonCard {pokemon} onSelect={() => openModal(pokemon)} /><!-- onselect passado na implementação do modal -->
             {/each}
         </div>
     {/if}
 
     {#if selectedPokemon}
         <PokemonDetailModal pokemon={selectedPokemon} onClose={closeModal} />
-    {/if}
+    {/if} <!-- Modal -->
 </main>
 
 <style>

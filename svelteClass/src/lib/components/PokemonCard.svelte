@@ -1,8 +1,8 @@
 <script>
-    const { pokemon, onSelect } = $props()
+    const { pokemon, onSelect } = $props() //onselect modal
 </script>
 
-<button class="card-button" onclick={onSelect}>
+<button class="card-button" onclick={onSelect}> <!-- button adicionado na implementação do modal -->
     <article>
         <img src={pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default} alt={pokemon.name}>
         <div class="info">
@@ -19,7 +19,6 @@
         border: none;
         padding: 0;
         cursor: pointer;
-        text-align: left;
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
     .card-button:hover, .card-button:focus {
