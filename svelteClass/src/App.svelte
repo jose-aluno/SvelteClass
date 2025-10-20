@@ -6,6 +6,10 @@
     let searchTerm = $state('');
     let selectedType = $state(null);
 
+    let selectedPokemon = $state(null); 
+    // O primeiro passo é ter uma forma de saber qual 
+    // Pokémon está selecionado para ser exibido no modal.
+
     $effect(() => {
         const fetchPokemons = async () => {
             try {
@@ -45,7 +49,14 @@
             })
     );
 
-    
+    //funcões simples para manipular o estado de selectedPokemon/modal
+    const openModal = (pokemon) => {
+        selectedPokemon = pokemon;
+    };
+
+    const closeModal = () => {
+        selectedPokemon = null;
+    };
 </script>
 
 <main>
