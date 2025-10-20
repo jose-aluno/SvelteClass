@@ -1,8 +1,11 @@
 <script>
-    const { pokemon } = $props();
+    const { pokemon, onSelect } = $props(); 
+    //O último passo é fazer com que o clique em um card 
+    //"avise" o App.svelte para abrir o modal com o Pokémon correspondente.
+    // adicionamos uma nova props de onselect 
 </script>
 
-<button class="card-button">
+<button class="card-button" onclick={onSelect}> <!--O evento onclick adicionado -->
     <article>
         <img
             src={pokemon.sprites.other["official-artwork"].front_default ||

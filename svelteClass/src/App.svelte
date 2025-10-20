@@ -1,14 +1,14 @@
 <script>
     import PokemonCard from "./lib/components/PokemonCard.svelte";
     import PokemonBanner from "./lib/components/PokemonBanner.svelte";
+    import PokemonDetailModal from "./lib/components/PokemonDetailModal.svelte"; //importa
+
     let pokemons = $state([]);
     let isLoading = $state(true);
     let searchTerm = $state('');
     let selectedType = $state(null);
 
     let selectedPokemon = $state(null); 
-    // O primeiro passo é ter uma forma de saber qual 
-    // Pokémon está selecionado para ser exibido no modal.
 
     $effect(() => {
         const fetchPokemons = async () => {
@@ -85,10 +85,17 @@
     {:else}
         <div class="pokemon-list">
             {#each filteredPokemons as pokemon (pokemon.id)}
-                <PokemonCard {pokemon} />
+                <PokemonCard {pokemon} onSelect={() => openModal(pokemon)}/> 
+                <!--agora precisamos passar a prop onSelect. Para cada card, 
+                passamos uma função que chama openModal com o Pokémon daquela iteração específica.-->
             {/each}
         </div>
     {/if}
+
+    {#if selectedPokemon} 
+        <PokemonDetailModal pokemon={selectedPokemon} onClose={closeModal} />
+    {/if}
+    <!-- criamos a renderização condicional do modal --> 
 </main>
 
 <style>
